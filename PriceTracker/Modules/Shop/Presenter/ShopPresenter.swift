@@ -23,6 +23,14 @@ final class ShopPresenter: ShopPresentationLogic {
         view?.displayPaterochka(paterochka)
     }
     
+    func presentOkey(_ okey: [OkeyCategoryViewModel]) {
+        view?.displayOkey(okey)
+    }
+    
+    func presentPerekrestok(_ perekrestok: [PerekrestokCategoryViewModel]) {
+        view?.displayPerekrestok(perekrestok)
+    }
+    
     func presentMagnitCategory(_ index: Int) {
         view?.displayMagnitCategory(index)
     }

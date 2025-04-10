@@ -10,12 +10,20 @@ import Foundation
 final class ProductPresenter: ProductPresentationLogic {
     weak var view: ProductDisplayLogic?
     
-    func presentProduct(product: PaterochkaProduct) {
-        view?.displayProduct(product: product)
+    func presentPaterochka(product: PaterochkaProduct) {
+        view?.displayPaterochka(product: product)
     }
     
-    func presentProduct(product: MagnitProduct) {
-        view?.displayProduct(product: product)
+    func presentMagnit(product: MagnitProduct) {
+        view?.displayMagnit(product: product)
+    }
+    
+    func presentPerekrestok(product: PaterochkaProduct) {
+        view?.displayPerekrestok(product: product)
+    }
+    
+    func presentOkey(product: MagnitProduct) {
+        view?.displayOkey(product: product)
     }
     
     func setProduct(product: ProductModel) {

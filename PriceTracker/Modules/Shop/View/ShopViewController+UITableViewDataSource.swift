@@ -12,9 +12,9 @@ extension ShopViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch shopType {
         case .okey:
-            return 5
+            return displayedProductsOkey.count
         case .perekrestok:
-            return 5
+            return displayedProductsPerekrestok.count
         case .paterochka:
             return displayedProductsPaterochka.count
         case .magnit:
@@ -27,9 +27,9 @@ extension ShopViewController: UITableViewDataSource {
         guard let shopGoodsCell = cell as? ShopGoodsCell else { return cell }
         switch shopType {
         case .okey:
-            print(2)
+            shopGoodsCell.configureOkey(TotalData.okeyAll[currentCategoryIndex].products[indexPath.row])
         case .perekrestok:
-            print(2)
+            shopGoodsCell.configurePerekrestok(TotalData.perekrestokAll[currentCategoryIndex].products[indexPath.row])
         case .paterochka:
             shopGoodsCell.configurePaterochka(TotalData.paterochkaAll[currentCategoryIndex].products[indexPath.row])
         case .magnit:

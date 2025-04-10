@@ -92,6 +92,52 @@ final class ShopGoodsCell: UITableViewCell {
             self?.image.image = loadedImage
         }
     }
+    
+    func configureOkey(_ product: OkeyProductViewModel) {
+        self.product = ProductModel(image: product.image, name: product.name, price: product.price, oldPrice: product.oldPrice, shop: .magnit, category: product.category, id: product.id)
+        priceLabel.text = product.price
+
+        if let oldPrice = product.oldPrice {
+            oldPriceLabel.attributedText = NSAttributedString(
+                string: oldPrice,
+                attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+            )
+        } else {
+            oldPriceLabel.attributedText = nil
+        }
+
+        descriptionLabel.text = product.name
+
+        currentURL = product.image
+        image.image = nil
+        ImageLoader.shared.loadImage(product.image) { [weak self] loadedImage in
+            guard self?.currentURL == product.image else { return }
+            self?.image.image = loadedImage
+        }
+    }
+    
+    func configurePerekrestok(_ product: PerekrestokProductViewModel) {
+        self.product = ProductModel(image: product.image, name: product.name, price: product.price, oldPrice: product.oldPrice, shop: .paterochka, category: product.category, id: product.id)
+        priceLabel.text = product.price
+
+        if let oldPrice = product.oldPrice {
+            oldPriceLabel.attributedText = NSAttributedString(
+                string: oldPrice,
+                attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+            )
+        } else {
+            oldPriceLabel.attributedText = nil
+        }
+
+        descriptionLabel.text = product.name
+
+        currentURL = product.image
+        image.image = nil
+        ImageLoader.shared.loadImage(product.image) { [weak self] loadedImage in
+            guard self?.currentURL == product.image else { return }
+            self?.image.image = loadedImage
+        }
+    }
 
     private func configureUI() {
         backgroundColor = .clear
@@ -112,7 +158,6 @@ final class ShopGoodsCell: UITableViewCell {
             saleWrap.removeFromSuperview()
         }
     }
-
     
     private func configureWrap() {
         addSubview(wrap)

@@ -13,12 +13,25 @@ final class ProductInteractor: ProductBusinessLogic {
     func fetchProduct(from: ShopType, category: String, productId: String) {
         switch from {
         case .okey:
-            print("ProductInteractor")
+            let cat = category.trimmingCharacters(in: .whitespaces)
+            if let categoryOut = TotalData.okeyRawAll.first(where: { $0.categoryName == cat }), let productOut = categoryOut.products?.first(where: { $0.productId == productId }) {
+                presenter?.presentOkey(product: productOut)
+            }
+            
+            if let product = TotalData.allProducts.first(where: { $0.category ?? "" == cat && $0.id == productId }) {
+                presenter?.setProduct(product: product)
+            }
         case .perekrestok:
-            print("ProductInteractor")
+            if let categoryOut = TotalData.perekrestokRawAll.first(where: { $0.categoryName == category }), let productOut = categoryOut.products?.first(where: { $0.productId == productId }) {
+                presenter?.presentPerekrestok(product: productOut)
+            }
+            
+            if let product = TotalData.allProducts.first(where: { $0.category ?? "" == category && $0.id == productId }) {
+                presenter?.setProduct(product: product)
+            }
         case .paterochka:
             if let categoryOut = TotalData.paterochkaRawAll.first(where: { $0.categoryName == category }), let productOut = categoryOut.products?.first(where: { $0.productId == productId }) {
-                presenter?.presentProduct(product: productOut)
+                presenter?.presentPaterochka(product: productOut)
             }
             
             if let product = TotalData.allProducts.first(where: { $0.category ?? "" == category && $0.id == productId }) {
@@ -27,13 +40,12 @@ final class ProductInteractor: ProductBusinessLogic {
         case .magnit:
             let cat = category.trimmingCharacters(in: .whitespaces)
             if let categoryOut = TotalData.magnitRawAll.first(where: { $0.categoryName == cat }), let productOut = categoryOut.products?.first(where: { $0.productId == productId }) {
-                presenter?.presentProduct(product: productOut)
+                presenter?.presentMagnit(product: productOut)
             }
             
             if let product = TotalData.allProducts.first(where: { $0.category ?? "" == cat && $0.id == productId }) {
                 presenter?.setProduct(product: product)
             }
-
         }
     }
     

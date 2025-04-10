@@ -30,9 +30,9 @@ final class ShopInteractor: ShopBusinessLogic {
     func fetchProducts(for shopType: ShopType) {
         switch shopType {
         case .okey:
-            print(1)
+            presenter?.presentOkey(TotalData.okeyAll)
         case .perekrestok:
-            print(1)
+            presenter?.presentPerekrestok(TotalData.perekrestokAll)
         case .paterochka:
             presenter?.presentPaterochka(TotalData.paterochkaAll)
         case .magnit:
@@ -43,9 +43,17 @@ final class ShopInteractor: ShopBusinessLogic {
     func fetchProductsForCategory(for shopType: ShopType, with categoryId: String) {
         switch shopType {
         case .okey:
-            print(3)
+            if let index = TotalData.okeyAll.firstIndex(where: { String($0.id) == categoryId }) {
+                presenter?.presentMagnitCategory(index)
+            } else {
+                print("Категория с id \(categoryId) не найдена.")
+            }
         case .perekrestok:
-            print(3)
+            if let index = TotalData.perekrestokAll.firstIndex(where: { $0.id == categoryId }) {
+                presenter?.presentPaterochkaCategory(index)
+            } else {
+                print("Категория с id \(categoryId) не найдена.")
+            }
         case .paterochka:
             if let index = TotalData.paterochkaAll.firstIndex(where: { $0.id == categoryId }) {
                 presenter?.presentPaterochkaCategory(index)

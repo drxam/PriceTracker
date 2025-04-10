@@ -8,7 +8,10 @@
 import Foundation
 
 protocol ProductDisplayLogic: AnyObject {
-    func displayProduct(product: PaterochkaProduct)
-    func displayProduct(product: MagnitProduct)
+    func displayPaterochka(product: PaterochkaProduct)
+    func displayMagnit(product: MagnitProduct)
+    func displayPerekrestok(product: PaterochkaProduct)
+    func displayOkey(product: MagnitProduct)
+    
     func setProduct(product: ProductModel)
 }

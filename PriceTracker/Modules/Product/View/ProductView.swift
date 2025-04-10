@@ -37,7 +37,7 @@ final class ProductView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with product: PaterochkaProduct) {
+    func configurePaterochka(with product: PaterochkaProduct) {
         shopView.image = UIImage(named: "5ka")
         print("PaterochkaProduct")
         descriptionLabel.text = product.name
@@ -47,12 +47,8 @@ final class ProductView: UIView {
         
         print("price = \(price ?? "nil") oldPrice = \(oldPrice ?? "nil")")
         
-//        if let oldPrice = product.oldPrice {
-            priceLabel.text = formatPrice(price)
-            oldPriceLabel.attributedText = NSAttributedString(string: formatPrice(oldPrice), attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue])
-//        } else {
-//            priceLabel.text = formatPrice(product.price)
-//        }
+        priceLabel.text = formatPrice(price)
+        oldPriceLabel.attributedText = NSAttributedString(string: formatPrice(oldPrice), attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue])
         
         currentURL = URL(string: product.images?.first ?? "")
         imageView.image = nil
@@ -66,9 +62,60 @@ final class ProductView: UIView {
         count.text = String(product.scoresCount ?? 545)
     }
     
-    func configure(with product: MagnitProduct) {
+    func configureMagnit(with product: MagnitProduct) {
         shopView.image = UIImage(named: "magnit")
         print("MagnitProduct")
+        descriptionLabel.text = product.name
+        
+        if let oldPrice = product.oldPrice {
+            priceLabel.text = formatPrice(product.price)
+            oldPriceLabel.attributedText = NSAttributedString(string: formatPrice(oldPrice), attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue])
+            print("price = \(formatPrice(product.price)) oldPrice = \(formatPrice(oldPrice))")
+        } else {
+            priceLabel.text = formatPrice(product.price)
+            print("price = \(formatPrice(product.price)) oldPrice = nil")
+        }
+        
+        currentURL = URL(string: product.images?.first ?? "")
+        imageView.image = nil
+        ImageLoader.shared.loadImage(URL(string: product.images?.first ?? "")) { [weak self] loadedImage in
+            guard self?.currentURL == URL(string: product.images?.first ?? "") else { return }
+            self?.imageView.image = loadedImage
+        }
+        
+        rating.text = String(product.rating ?? 4.2)
+        count.text = String(product.scoresCount ?? 545)
+        category.text = product.category
+    }
+    
+    func configurePerekrestok(with product: PaterochkaProduct) {
+        shopView.image = UIImage(named: "perekrestok")
+        print("PerekrestokProduct")
+        descriptionLabel.text = product.name
+        
+        let price = product.price ?? product.oldPrice
+        let oldPrice = product.price == nil ? nil : product.oldPrice
+        
+        print("price = \(price ?? "nil") oldPrice = \(oldPrice ?? "nil")")
+        
+        priceLabel.text = formatPrice(price)
+        oldPriceLabel.attributedText = NSAttributedString(string: formatPrice(oldPrice), attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue])
+        
+        currentURL = URL(string: product.images?.first ?? "")
+        imageView.image = nil
+        ImageLoader.shared.loadImage(URL(string: product.images?.first ?? "")) { [weak self] loadedImage in
+            guard self?.currentURL == URL(string: product.images?.first ?? "") else { return }
+            self?.imageView.image = loadedImage
+        }
+        
+        category.text = product.category
+        rating.text = String(product.rating ?? 4.2)
+        count.text = String(product.scoresCount ?? 545)
+    }
+    
+    func configureOkey(with product: MagnitProduct) {
+        shopView.image = UIImage(named: "okey")
+        print("OkeyProduct")
         descriptionLabel.text = product.name
         
         if let oldPrice = product.oldPrice {

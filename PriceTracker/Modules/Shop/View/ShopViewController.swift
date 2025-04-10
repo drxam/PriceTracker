@@ -22,6 +22,8 @@ final class ShopViewController: UIViewController, ShopDisplayLogic, ShopGoodsCel
     let pageSize = 10
     var displayedProductsMagnit: [MagnitProductViewModel] = []
     var displayedProductsPaterochka: [PaterochkaProductViewModel] = []
+    var displayedProductsPerekrestok: [PerekrestokProductViewModel] = []
+    var displayedProductsOkey: [OkeyProductViewModel] = []
     
     override func loadView() {
         view = shopView
@@ -53,6 +55,14 @@ final class ShopViewController: UIViewController, ShopDisplayLogic, ShopGoodsCel
         interactor?.fetchProductsForCategory(for: shopType, with: categoriesName[selectedIndex.row].id!)
     }
     
+    func displayOkey(_ categories: [OkeyCategoryViewModel]) {
+        interactor?.fetchProductsForCategory(for: shopType, with: categoriesName[selectedIndex.row].id!)
+    }
+    
+    func displayPerekrestok(_ categories: [PerekrestokCategoryViewModel]) {
+        interactor?.fetchProductsForCategory(for: shopType, with: categoriesName[selectedIndex.row].id!)
+    }
+    
     func displayMagnitCategory(_ index: Int) {
         currentCategoryIndex = index
         displayedProductsMagnit.removeAll()
@@ -71,13 +81,52 @@ final class ShopViewController: UIViewController, ShopDisplayLogic, ShopGoodsCel
         shopView.goods.reloadData()
     }
     
+    func displayOkeyCategory(_ index: Int) {
+        currentCategoryIndex = index
+        displayedProductsOkey.removeAll()
+        currentPage = 0
+        loadMoreProducts()
+        
+        shopView.goods.reloadData()
+    }
+    
+    func displayPerekrestokCategory(_ index: Int) {
+        currentCategoryIndex = index
+        displayedProductsPerekrestok.removeAll()
+        currentPage = 0
+        loadMoreProducts()
+        
+        shopView.goods.reloadData()
+    }
+    
     func loadMoreProducts() {
         switch shopType {
         case .okey:
-            print(4)
+            guard currentCategoryIndex < TotalData.okeyAll.count else { return }
+            let allProducts = TotalData.okeyAll[currentCategoryIndex].products
+            
+            let startIndex = currentPage * pageSize
+            let endIndex = min(startIndex + pageSize, allProducts.count)
+
+            guard startIndex < endIndex else { return }
+
+            let newProducts = Array(allProducts[startIndex..<endIndex])
+            displayedProductsOkey.append(contentsOf: newProducts)
+            currentPage += 1
             
         case .perekrestok:
-            print(4)
+            guard currentCategoryIndex < TotalData.perekrestokAll.count else { return }
+            let allProducts = TotalData.perekrestokAll[currentCategoryIndex].products
+            
+            let startIndex = currentPage * pageSize
+            let endIndex = min(startIndex + pageSize, allProducts.count)
+
+            guard startIndex < endIndex else { return }
+
+            let newProducts = Array(allProducts[startIndex..<endIndex])
+            displayedProductsPerekrestok.append(contentsOf: newProducts)
+            print("ПЕРЕКРЕСТОК \(displayedProductsPerekrestok.count)")
+            currentPage += 1
             
         case .paterochka:
             guard currentCategoryIndex < TotalData.paterochkaAll.count else { return }

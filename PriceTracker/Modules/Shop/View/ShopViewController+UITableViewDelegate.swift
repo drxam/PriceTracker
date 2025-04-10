@@ -12,9 +12,11 @@ extension ShopViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch shopType {
         case .okey:
-            print("didSelectRowAt")
+            let product = displayedProductsOkey[indexPath.item]
+            router?.showProductScreen(from: ShopType.okey, category: product.category ?? "", productId: product.id ?? "")
         case .perekrestok:
-            print("didSelectRowAt")
+            let product = displayedProductsPerekrestok[indexPath.item]
+            router?.showProductScreen(from: ShopType.perekrestok, category: product.category ?? "", productId: product.id ?? "")
         case .paterochka:
             let product = displayedProductsPaterochka[indexPath.item]
             router?.showProductScreen(from: ShopType.paterochka, category: product.category ?? "", productId: product.id ?? "")
