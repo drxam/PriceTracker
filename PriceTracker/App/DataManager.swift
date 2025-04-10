@@ -54,7 +54,7 @@ final class DataManager {
     private func loadMagnitData() {
         let magnit = TotalData.magnitRawAll
         let magnitCategories: [MagnitCategoryViewModel] = magnit.compactMap { category in
-            let categoryName = (category.categoryName?.isEmpty ?? true) ? "Молоко, яйцо, сыр" : category.categoryName!
+            let categoryName = (category.categoryName?.isEmpty ?? true) ? "Молоко, яйцо, сыр" : category.categoryName ?? ""
             
             guard let id = category.id,
                   let products = category.products else {

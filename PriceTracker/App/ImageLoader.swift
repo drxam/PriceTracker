@@ -29,7 +29,7 @@ final class ImageLoader {
             guard let data = try? Data(contentsOf: url),
                   let image = UIImage(data: data) else {
                 let noImage = UIImage(named: "no_image")
-                self.imageCache.setObject(noImage!, forKey: url as NSURL)
+                self.imageCache.setObject(noImage ?? UIImage(), forKey: url as NSURL)
                 DispatchQueue.main.async {
                     completion(noImage)
                 }

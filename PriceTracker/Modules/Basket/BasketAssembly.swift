@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class BasketAssembly: NSObject {
-    weak var viewController: UIViewController!
+    weak var viewController: UIViewController?
     
     class func configureModule() -> UIViewController {
         let view = BasketViewController()

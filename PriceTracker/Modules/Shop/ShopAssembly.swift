@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class ShopAssembly: NSObject {
-    weak var viewController: UIViewController!
+    weak var viewController: UIViewController?
     
     class func configureModule(with shopType: ShopType) -> UIViewController {
         let view = ShopViewController()

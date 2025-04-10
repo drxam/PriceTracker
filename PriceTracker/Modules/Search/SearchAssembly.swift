@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class SearchAssembly: NSObject {
-    weak var viewController: UIViewController!
+    weak var viewController: UIViewController?
     
     class func configureModule(with query: String = "", from shopType: ShopType? = nil) -> UIViewController {
         let view = SearchViewController()

@@ -48,19 +48,19 @@ final class ShopViewController: UIViewController, ShopDisplayLogic, ShopGoodsCel
     }
     
     func displayMagnit(_ categories: [MagnitCategoryViewModel]) {
-        interactor?.fetchProductsForCategory(for: shopType, with: categoriesName[selectedIndex.row].id!)
+        interactor?.fetchProductsForCategory(for: shopType, with: categoriesName[selectedIndex.row].id ?? "")
     }
     
     func displayPaterochka(_ categories: [PaterochkaCategoryViewModel]) {
-        interactor?.fetchProductsForCategory(for: shopType, with: categoriesName[selectedIndex.row].id!)
+        interactor?.fetchProductsForCategory(for: shopType, with: categoriesName[selectedIndex.row].id ?? "")
     }
     
     func displayOkey(_ categories: [OkeyCategoryViewModel]) {
-        interactor?.fetchProductsForCategory(for: shopType, with: categoriesName[selectedIndex.row].id!)
+        interactor?.fetchProductsForCategory(for: shopType, with: categoriesName[selectedIndex.row].id ?? "")
     }
     
     func displayPerekrestok(_ categories: [PerekrestokCategoryViewModel]) {
-        interactor?.fetchProductsForCategory(for: shopType, with: categoriesName[selectedIndex.row].id!)
+        interactor?.fetchProductsForCategory(for: shopType, with: categoriesName[selectedIndex.row].id ?? "")
     }
     
     func displayMagnitCategory(_ index: Int) {

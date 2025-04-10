@@ -157,7 +157,11 @@ final class MainView: UIView {
         goodsTable.pinBottom(to: goodsWrap.bottomAnchor, 25)
         goodsTable.pinHorizontal(to: goodsWrap, 15)
         
-        let layout = goodsTable.collectionViewLayout as! UICollectionViewFlowLayout
+        guard let layout = goodsTable.collectionViewLayout as? UICollectionViewFlowLayout else {
+            print("Ошибка: layout не является UICollectionViewFlowLayout")
+            return
+        }
+
         layout.itemSize = CGSize(width: 162, height: 260)
         layout.minimumLineSpacing = 15
         layout.minimumInteritemSpacing = 10

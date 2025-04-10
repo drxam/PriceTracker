@@ -79,12 +79,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
 
             let fileManager = FileManager.default
-            let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-            let filePath = documentDirectory.appendingPathComponent("\(storeName).json")
+            let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+            let filePath = documentDirectory?.appendingPathComponent("\(storeName).json")
             
             do {
-                try data.write(to: filePath)
-                print("Файл успешно сохранён по пути: \(filePath.path)")
+                if let filePath = filePath {
+                    try data.write(to: filePath)
+                    print("Файл успешно сохранён по пути: \(filePath.path)")
+                }
             } catch {
                 print("Ошибка при сохранении файла: \(error.localizedDescription)")
             }

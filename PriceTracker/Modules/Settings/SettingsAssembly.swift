@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 final class SettingsAssembly: NSObject {
-    weak var viewController: UIViewController!
+    weak var viewController: UIViewController?
     
     class func configureModule() -> UIViewController {
         let view = SettingsViewController()
