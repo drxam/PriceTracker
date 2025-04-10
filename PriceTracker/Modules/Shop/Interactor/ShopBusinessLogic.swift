@@ -11,4 +11,5 @@ protocol ShopBusinessLogic: AnyObject {
     func fetchCategories(for shopType: ShopType)
     func fetchProducts(for shopType: ShopType)
     func fetchProductsForCategory(for shopType: ShopType, with categoryId: String)
+    func plusButtonTapped(for product: ProductModel?)
 }

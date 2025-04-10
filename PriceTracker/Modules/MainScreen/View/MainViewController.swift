@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MainViewController: UIViewController, MainDisplayLogic {
+final class MainViewController: UIViewController, MainDisplayLogic, MainGoodsCellDelegate {
     var mainView = MainView()
     var router: MainRouterProtocol?
     var interactor: MainBusinessLogic?
@@ -69,6 +69,10 @@ final class MainViewController: UIViewController, MainDisplayLogic {
         mainView.shops[1].addTarget(self, action: #selector(buttonTapped2), for: .touchUpInside)
         mainView.shops[2].addTarget(self, action: #selector(buttonTapped3), for: .touchUpInside)
         mainView.shops[3].addTarget(self, action: #selector(buttonTapped4), for: .touchUpInside)
+    }
+    
+    func didTapAddButton(for product: ProductModel?) {
+        interactor?.plusButtonTapped(for: product)
     }
     
     @objc private func buttonTapped1() {

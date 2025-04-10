@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ShopViewController: UIViewController, ShopDisplayLogic {
+final class ShopViewController: UIViewController, ShopDisplayLogic, ShopGoodsCellDelegate {
     let shopView = ShopView()
     var router: ShopRouterProtocol?
     var interactor: ShopBusinessLogic?
@@ -30,7 +30,6 @@ final class ShopViewController: UIViewController, ShopDisplayLogic {
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
-        print(TotalData.magnitAll.count)
     }
     
     func configureShopType(_ shopType: ShopType) {
@@ -110,6 +109,10 @@ final class ShopViewController: UIViewController, ShopDisplayLogic {
         shopView.goods.reloadData()
     }
     
+    func didTapAddButton(for product: ProductModel?) {
+        interactor?.plusButtonTapped(for: product)
+    }
+    
     private func configure() {
         congifureCategories()
         configureGoods()
@@ -141,6 +144,6 @@ final class ShopViewController: UIViewController, ShopDisplayLogic {
     }
     
     @objc private func searchButtonTapped() {
-        router?.showSearchScreen()
+        router?.showSearchScreen(from: self.shopType)
     }
 }

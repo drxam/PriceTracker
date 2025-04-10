@@ -11,8 +11,8 @@ import UIKit
 final class BasketRouter: BasketRouterProtocol {
     weak var view: UIViewController?
     
-    func showProductScreen() {
-        let vc = ProductAssembly.configureModule(shop: ShopType.magnit, category: "", productId: "")
+    func showProductScreen(_ product: ProductModel) {
+        let vc = ProductAssembly.configureModule(shop: product.shop, category: product.category ?? "", productId: product.id ?? "")
         vc.modalPresentationStyle = .fullScreen
         view?.present(vc, animated: true)
     }

@@ -10,15 +10,17 @@ import UIKit
 final class BasketViewCell: UITableViewCell {
     static let reuseId = "BasketViewCell"
     
-    let image = UIImageView()
-    let descriptionLabel = UITextView()
-    let priceLabel = UILabel()
-    let oldPriceLabel = UILabel()
-    let saleWrap = UIView()
-    let saleLabel = UILabel()
-    let plusButton = UIButton()
-    let minusButton = UIButton()
+    private let image = UIImageView()
+    private let descriptionLabel = UITextView()
+    private let priceLabel = UILabel()
+    private let oldPriceLabel = UILabel()
+    private let saleWrap = UIView()
+    private let saleLabel = UILabel()
+    private let plusButton = UIButton()
+    private let minusButton = UIButton()
     let countLabel = UILabel()
+    
+    weak var delegate: BasketViewCellDelegate?
     
     var discount: Int = 0
     var currentURL: URL?
@@ -45,10 +47,10 @@ final class BasketViewCell: UITableViewCell {
         saleLabel.text = nil
     }
     
-    func configure(_ product: ProductModel) {
-        priceLabel.text = product.price
+    func configure(_ product: ProductModel, _ count: Int, _ newPrice: String, _ newOldPrice: String?) {
+        priceLabel.text = newPrice
 
-        if let oldPrice = product.oldPrice {
+        if let oldPrice = newOldPrice {
             oldPriceLabel.attributedText = NSAttributedString(
                 string: oldPrice,
                 attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue]
@@ -58,6 +60,7 @@ final class BasketViewCell: UITableViewCell {
         }
 
         descriptionLabel.text = product.name
+        countLabel.text = String(count)
 
         currentURL = product.image
         image.image = nil
@@ -69,8 +72,6 @@ final class BasketViewCell: UITableViewCell {
 
     private func configureUI() {
         self.selectionStyle = .none
-        oldPriceLabel.attributedText = NSAttributedString(string: "480,00 ₽", attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue])
-        
         configureImage()
         configureDescriptionLabel()
         configurePriceLabel()
@@ -95,7 +96,8 @@ final class BasketViewCell: UITableViewCell {
         image.pinWidth(to: image.heightAnchor)
         image.layer.cornerRadius = 15
         image.layer.masksToBounds = true
-        image.image = UIImage(systemName: "magnit")
+        image.backgroundColor = .white
+        image.contentMode = .scaleAspectFit
     }
     
     private func configureDescriptionLabel() {
@@ -106,7 +108,7 @@ final class BasketViewCell: UITableViewCell {
         descriptionLabel.setHeight(35)
         descriptionLabel.font = .systemFont(ofSize: 12)
         descriptionLabel.backgroundColor = .clear
-        descriptionLabel.text = "Молоко КУБАНСКАЯ БУРЕНКА, 2,5%, 1,4л"
+        
         descriptionLabel.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 5, right: 0)
         descriptionLabel.isEditable = false
         descriptionLabel.textAlignment = .left
@@ -121,7 +123,6 @@ final class BasketViewCell: UITableViewCell {
         priceLabel.setHeight(20)
         priceLabel.setWidth(75)
         priceLabel.font = .boldSystemFont(ofSize: 14)
-        priceLabel.text = "420,00 ₽"
         priceLabel.backgroundColor = .clear
         priceLabel.textAlignment = .right
     }
@@ -181,7 +182,6 @@ final class BasketViewCell: UITableViewCell {
         countLabel.backgroundColor = .clear
         countLabel.textAlignment = .center
         countLabel.font = .boldSystemFont(ofSize: 14)
-        countLabel.text = "1"
         
         countWrap.addSubview(minusButton)
         minusButton.pinVertical(to: countWrap)
@@ -190,6 +190,7 @@ final class BasketViewCell: UITableViewCell {
         let minus = UIImage(named: "minus")?.resized(by: 0.7)
         minusButton.setImage(minus, for: .normal)
         minusButton.backgroundColor = .clear
+        minusButton.addTarget(self, action: #selector(didTapMinus), for: .touchUpInside)
         
         countWrap.addSubview(plusButton)
         plusButton.pinVertical(to: countWrap)
@@ -198,10 +199,14 @@ final class BasketViewCell: UITableViewCell {
         plusButton.setImage(UIImage(named: "plus"), for: .normal)
         plusButton.tintColor = UIColor(named: "icon_color")
         plusButton.backgroundColor = .clear
+        plusButton.addTarget(self, action: #selector(didTapPlus), for: .touchUpInside)
     }
     
-//    private func calculateWidth(_ text: String) -> CGFloat {
-//        let width = text.size(withAttributes: [.font: UIFont.systemFont(ofSize: 14)]).width + 10
-//        return width
-//    }
+    @objc private func didTapPlus() {
+        delegate?.didTapPlusButton(descriptionLabel.text)
+    }
+    
+    @objc private func didTapMinus() {
+        delegate?.didTapMinusButton(descriptionLabel.text)
+    }
 }

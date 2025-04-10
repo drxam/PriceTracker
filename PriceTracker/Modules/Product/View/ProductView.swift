@@ -133,6 +133,7 @@ final class ProductView: UIView {
         imageView.pinHorizontal(to: wrap, 15)
         imageView.setHeight(290)
         imageView.backgroundColor = .clear
+        imageView.contentMode = .scaleAspectFit
     }
     
     private func configureShopView() {

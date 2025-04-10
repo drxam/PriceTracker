@@ -7,9 +7,12 @@
 
 import UIKit
 
-final class TabBarController: UITabBarController {
+final class TabBarController: UITabBarController, UITabBarControllerDelegate {
+    private var previousIndex = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.delegate = self
         
         let appearance = UITabBarAppearance()
         appearance.backgroundColor = UIColor(named: "wrap_color")
@@ -59,6 +62,25 @@ final class TabBarController: UITabBarController {
         tabBar.layer.cornerRadius = tabBar.frame.height / 2
         tabBar.layer.masksToBounds = true
     }
+    
+    func tabBarController(
+        _ tabBarController: UITabBarController,
+        shouldSelect viewController: UIViewController
+    ) -> Bool {
+        guard (viewControllers?.firstIndex(of: viewController)) != nil else { return false }
+        previousIndex = selectedIndex
+        return true
+    }
+    
+    func tabBarController(
+        _ tabBarController: UITabBarController,
+        animationControllerForTransitionFrom fromVC: UIViewController,
+        to toVC: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
+        guard let toIndex = viewControllers?.firstIndex(of: toVC) else { return nil }
+        let direction: TabBarTransitionAnimator.Direction = toIndex > previousIndex ? .right : .left
+        return TabBarTransitionAnimator(direction: direction)
+    }
 }
 
 extension UIImage {
@@ -73,5 +95,51 @@ extension UIImage {
         let image = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
         UIGraphicsEndImageContext()
         return image
+    }
+}
+
+class TabBarTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+    enum Direction {
+        case left
+        case right
+    }
+    
+    let duration: TimeInterval = 0.3
+    let direction: Direction
+    
+    init(direction: Direction) {
+        self.direction = direction
+    }
+    
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return duration
+    }
+    
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        guard
+            let fromView = transitionContext.view(forKey: .from),
+            let toView = transitionContext.view(forKey: .to)
+        else {
+            transitionContext.completeTransition(false)
+            return
+        }
+        
+        let containerView = transitionContext.containerView
+        let offset = direction == .right ? containerView.frame.width : -containerView.frame.width
+        
+        toView.transform = CGAffineTransform(translationX: offset, y: 0)
+        containerView.addSubview(toView)
+        
+        UIView.animate(
+            withDuration: duration,
+            animations: {
+                fromView.transform = CGAffineTransform(translationX: -offset, y: 0)
+                toView.transform = .identity
+            },
+            completion: { finished in
+                fromView.transform = .identity
+                transitionContext.completeTransition(finished)
+            }
+        )
     }
 }

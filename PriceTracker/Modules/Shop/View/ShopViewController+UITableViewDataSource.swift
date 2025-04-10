@@ -35,6 +35,7 @@ extension ShopViewController: UITableViewDataSource {
         case .magnit:
             shopGoodsCell.configureMagnit(TotalData.magnitAll[currentCategoryIndex].products[indexPath.row])
         }
+        shopGoodsCell.delegate = self
         return shopGoodsCell
     }
 }

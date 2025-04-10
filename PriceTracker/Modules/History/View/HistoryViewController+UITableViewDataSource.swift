@@ -10,18 +10,19 @@ import UIKit
 
 extension HistoryViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 12
+        return TotalData.purchases.count == 0 ? 1 : TotalData.purchases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row % 4 == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: MonthViewCell.reuseId, for: indexPath)
-            guard let monthViewCell = cell as? MonthViewCell else { return cell }
-            return monthViewCell
+        if TotalData.purchases.count == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: EmptyViewCell.reuseId, for: indexPath)
+            guard let emptyCell = cell as? EmptyViewCell else { return cell }
+            emptyCell.configure("История покупок пуста")
+            return emptyCell
         }
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: PurchasesViewCell.reuseId, for: indexPath)
         guard let purchasesViewCell = cell as? PurchasesViewCell else { return cell }
+        purchasesViewCell.configure(TotalData.purchases[indexPath.row])
         return purchasesViewCell
     }
 }

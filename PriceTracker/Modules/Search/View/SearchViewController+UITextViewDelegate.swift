@@ -25,13 +25,9 @@ extension SearchViewController: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if text == "\n" {
-            performYourAction()
+            configure(textView.text, self.shopType)
             return false
         }
         return true
-    }
-    
-    func performYourAction() {
-        print("Кнопка 'Return' нажата!")
     }
 }

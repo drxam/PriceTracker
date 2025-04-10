@@ -17,4 +17,8 @@ final class ProductPresenter: ProductPresentationLogic {
     func presentProduct(product: MagnitProduct) {
         view?.displayProduct(product: product)
     }
+    
+    func setProduct(product: ProductModel) {
+        view?.setProduct(product: product)
+    }
 }

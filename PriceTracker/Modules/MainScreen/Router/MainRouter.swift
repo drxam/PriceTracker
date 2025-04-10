@@ -23,8 +23,8 @@ final class MainRouter: MainRouterProtocol {
         view?.present(vc, animated: true)
     }
     
-    func showSearchScreen() {
-        let vc = SearchAssembly.configureModule()
+    func showSearchScreen(_ query: String) {
+        let vc = SearchAssembly.configureModule(with: query)
         vc.modalPresentationStyle = .fullScreen
         view?.present(vc, animated: true)
     }

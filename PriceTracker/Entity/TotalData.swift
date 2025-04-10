@@ -22,4 +22,6 @@ final class TotalData {
     static var magnitAllProducts: [ProductModel] = []
     
     static var allProducts: [ProductModel] = []
+    
+    static var purchases: [PurchaseModel] = []
 }

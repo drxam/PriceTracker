@@ -60,4 +60,8 @@ final class ShopInteractor: ShopBusinessLogic {
             }
         }
     }
+    
+    func plusButtonTapped(for product: ProductModel?) {
+        NotificationCenter.default.post(name: NSNotification.Name("AddNewItem"), object: product)
+    }
 }

@@ -24,4 +24,8 @@ final class MainInteractor: MainBusinessLogic {
         
         presenter?.presentProducts(newProducts)
     }
+    
+    func plusButtonTapped(for product: ProductModel?) {
+        NotificationCenter.default.post(name: NSNotification.Name("AddNewItem"), object: product)
+    }
 }

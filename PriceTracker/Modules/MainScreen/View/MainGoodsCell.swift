@@ -10,6 +10,8 @@ import UIKit
 final class MainGoodsCell: UICollectionViewCell {
     static let reuseId: String = "MainGoodsCell"
     
+    var delegate: MainGoodsCellDelegate?
+    
     let priceLabel = UILabel()
     let oldPriceLabel = UILabel()
     let descriptionLabel = UITextView()
@@ -22,6 +24,9 @@ final class MainGoodsCell: UICollectionViewCell {
     var discount: Int = 0
     var currentURL: URL?
     var shopType: ShopType = .magnit
+    var product: ProductModel?
+    
+    var topConstraints: [NSLayoutConstraint] = []
     
     override init(frame: CGRect) {
         super .init(frame: .zero)
@@ -54,9 +59,10 @@ final class MainGoodsCell: UICollectionViewCell {
     }
     
     func configure(_ product: ProductModel) {
+        self.product = product
         priceLabel.text = product.price
         
-        if let oldPrice = product.oldPrice {
+        if let oldPrice = product.oldPrice, !oldPrice.isEmpty {
             oldPriceLabel.attributedText = NSAttributedString(
                 string: oldPrice,
                 attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue]
@@ -71,11 +77,15 @@ final class MainGoodsCell: UICollectionViewCell {
             configureSaleWrap()
             configureSaleLabel()
             
-            if let oldConstraint = descriptionLabel.constraints.first(where: { $0.firstAttribute == .top }) {
-                oldConstraint.isActive = false
+            for constraint in topConstraints {
+                constraint.constant = 22
             }
-            descriptionLabel.pinTop(to: plusButton.bottomAnchor, 5)
-            descriptionLabel.pinBottom(to: self.bottomAnchor)
+//            if let oldConstraint = descriptionLabel.constraints.first(where: { $0.firstAttribute == .top }) {
+//                oldConstraint.isActive = false
+//                descriptionLabel.pinTop(to: priceLabel.bottomAnchor, 30)
+//            }
+//            descriptionLabel.pinTop(to: plusButton.bottomAnchor, 5)
+//            descriptionLabel.pinBottom(to: self.bottomAnchor)
             
         } else {
             oldPriceLabel.removeFromSuperview()
@@ -117,7 +127,8 @@ final class MainGoodsCell: UICollectionViewCell {
         imageView.pinTop(to: self)
         imageView.pinHorizontal(to: self)
         imageView.pinHeight(to: self.widthAnchor)
-        imageView.backgroundColor = .systemGray5
+        imageView.backgroundColor = .white
+        imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 30
     }
     
@@ -152,9 +163,9 @@ final class MainGoodsCell: UICollectionViewCell {
     }
     
     private func configureSaleWrap() {
-        imageView.addSubview(saleWrap)
-        saleWrap.pinTop(to: imageView.topAnchor, 10)
-        saleWrap.pinRight(to: imageView.trailingAnchor, 10)
+        addSubview(saleWrap)
+        saleWrap.pinTop(to: topAnchor, 10)
+        saleWrap.pinRight(to: trailingAnchor, 10)
         saleWrap.setHeight(22)
         saleWrap.setWidth(45)
         saleWrap.backgroundColor = UIColor(red: 1.0, green: 98 / 255.0, blue: 0, alpha: 1)
@@ -180,7 +191,9 @@ final class MainGoodsCell: UICollectionViewCell {
     
     private func configureDescriptionLabel() {
         addSubview(descriptionLabel)
-        descriptionLabel.pinTop(to: priceLabel.bottomAnchor, 7)
+        let topConstraint = descriptionLabel.pinTop(to: priceLabel.bottomAnchor, 7)
+        topConstraints.append(topConstraint)
+//        descriptionLabel.pinTop(to: priceLabel.bottomAnchor, 7)
         descriptionLabel.pinBottom(to: self.bottomAnchor)
         descriptionLabel.pinLeft(to: self.leadingAnchor, 10)
         descriptionLabel.pinRight(to: self.trailingAnchor, 10)
@@ -202,5 +215,10 @@ final class MainGoodsCell: UICollectionViewCell {
         plusButton.layer.masksToBounds = true
         plusButton.setImage(UIImage(named: "plus"), for: .normal)
         plusButton.tintColor = UIColor(named: "icon_color")
+        plusButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func buttonTapped() {
+        delegate?.didTapAddButton(for: self.product)
     }
 }

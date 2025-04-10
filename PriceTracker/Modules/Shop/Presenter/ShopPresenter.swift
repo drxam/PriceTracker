@@ -30,9 +30,4 @@ final class ShopPresenter: ShopPresentationLogic {
     func presentPaterochkaCategory(_ index: Int) {
         view?.displayPaterochkaCategory(index)
     }
-    
-    private func formatPrice(_ price: Int) -> String {
-        let priceInRubles = Double(price) / 100.0
-        return String(format: "%.2f ₽", priceInRubles).replacingOccurrences(of: ".", with: ",")
-    }
 }

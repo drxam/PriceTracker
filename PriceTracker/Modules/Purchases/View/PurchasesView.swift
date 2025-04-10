@@ -84,7 +84,7 @@ final class PurchasesView: UIView {
         table.pinTop(to: line1.bottomAnchor, 10)
         table.pinBottom(to: button.topAnchor, 20)
         table.pinHorizontal(to: historyWrap, 15)
-        table.backgroundColor = .systemBlue
+        table.backgroundColor = .clear
     }
     
     private func configureAnalytics() {

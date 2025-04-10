@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ShopType {
+enum ShopType: CaseIterable {
     case okey
     case perekrestok
     case paterochka

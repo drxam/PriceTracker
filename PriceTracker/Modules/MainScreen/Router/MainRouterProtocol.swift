@@ -10,5 +10,5 @@ import Foundation
 protocol MainRouterProtocol: AnyObject {
     func showShopScreen(with shopType: ShopType)
     func showProductScreen(from: ShopType, category: String, productId: String)
-    func showSearchScreen()
+    func showSearchScreen(_ query: String)
 }

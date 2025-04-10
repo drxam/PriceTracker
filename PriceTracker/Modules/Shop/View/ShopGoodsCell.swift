@@ -10,6 +10,8 @@ import UIKit
 final class ShopGoodsCell: UITableViewCell {
     static let reuseId = "ShopGoodsCell"
     
+    var delegate: ShopGoodsCellDelegate?
+    
     private let wrap = UIView()
     let image = UIImageView()
     let priceLabel = UILabel()
@@ -21,6 +23,7 @@ final class ShopGoodsCell: UITableViewCell {
     
     var discount: Int = 0
     private var currentURL: URL?
+    var product: ProductModel?
 
     @available(*, unavailable)
     override func awakeFromNib() {
@@ -45,6 +48,7 @@ final class ShopGoodsCell: UITableViewCell {
     }
     
     func configureMagnit(_ product: MagnitProductViewModel) {
+        self.product = ProductModel(image: product.image, name: product.name, price: product.price, oldPrice: product.oldPrice, shop: .magnit, category: product.category, id: product.id)
         priceLabel.text = product.price
 
         if let oldPrice = product.oldPrice {
@@ -67,6 +71,7 @@ final class ShopGoodsCell: UITableViewCell {
     }
     
     func configurePaterochka(_ product: PaterochkaProductViewModel) {
+        self.product = ProductModel(image: product.image, name: product.name, price: product.price, oldPrice: product.oldPrice, shop: .paterochka, category: product.category, id: product.id)
         priceLabel.text = product.price
 
         if let oldPrice = product.oldPrice {
@@ -123,7 +128,8 @@ final class ShopGoodsCell: UITableViewCell {
         image.pinLeft(to: wrap.leadingAnchor, 10)
         image.pinWidth(to: image.heightAnchor)
         image.layer.cornerRadius = 15
-        image.backgroundColor = .systemGray5
+        image.backgroundColor = .white
+        image.contentMode = .scaleAspectFit
     }
     
     private func configureDescriptionLabel() {
@@ -195,5 +201,10 @@ final class ShopGoodsCell: UITableViewCell {
         plusButton.layer.cornerRadius = 10
         plusButton.layer.masksToBounds = true
         plusButton.setImage(UIImage(named: "plus"), for: .normal)
+        plusButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func buttonTapped() {
+        delegate?.didTapAddButton(for: self.product)
     }
 }

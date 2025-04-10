@@ -13,10 +13,17 @@ class PurchasesAssembly: NSObject {
     
     class func configureModule() -> UIViewController {
         let view = PurchasesViewController()
+        let interactor = PurchasesInteractor()
+        let presenter = PurchasesPresenter()
         let router = PurchasesRouter()
         
         view.router = router
+        view.interactor = interactor
+        interactor.presenter = presenter
+        presenter.view = view
         router.view = view
+        
+        view.configureNotificationCenter()
         
         return view
     }

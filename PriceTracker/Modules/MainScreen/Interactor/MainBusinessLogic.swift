@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import UIKit
 
 protocol MainBusinessLogic: AnyObject {
     func loadMoreProducts()
+    func plusButtonTapped(for product: ProductModel?)
 }

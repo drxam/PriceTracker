@@ -20,10 +20,24 @@ final class ProductInteractor: ProductBusinessLogic {
             if let categoryOut = TotalData.paterochkaRawAll.first(where: { $0.categoryName == category }), let productOut = categoryOut.products?.first(where: { $0.productId == productId }) {
                 presenter?.presentProduct(product: productOut)
             }
+            
+            if let product = TotalData.allProducts.first(where: { $0.category ?? "" == category && $0.id == productId }) {
+                presenter?.setProduct(product: product)
+            }
         case .magnit:
-            if let categoryOut = TotalData.magnitRawAll.first(where: { $0.categoryName == category }), let productOut = categoryOut.products?.first(where: { $0.productId == productId }) {
+            let cat = category.trimmingCharacters(in: .whitespaces)
+            if let categoryOut = TotalData.magnitRawAll.first(where: { $0.categoryName == cat }), let productOut = categoryOut.products?.first(where: { $0.productId == productId }) {
                 presenter?.presentProduct(product: productOut)
             }
+            
+            if let product = TotalData.allProducts.first(where: { $0.category ?? "" == cat && $0.id == productId }) {
+                presenter?.setProduct(product: product)
+            }
+
         }
+    }
+    
+    func plusButtonTapped(for product: ProductModel?) {
+        NotificationCenter.default.post(name: NSNotification.Name("AddNewItem"), object: product)
     }
 }

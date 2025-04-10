@@ -27,6 +27,12 @@ final class PurchasesViewCell: UITableViewCell {
         configureUI()
     }
     
+    func configure(_ model: PurchaseModel) {
+        sum.text = model.price
+        self.count.text = "Товаров: \(model.count)"
+        self.date.text = model.date
+    }
+    
     private func configureUI() {
         configurePurchase()
         configureSum()
@@ -42,22 +48,20 @@ final class PurchasesViewCell: UITableViewCell {
         purchase.pinLeft(to: self.leadingAnchor, 5)
         purchase.pinTop(to: self.topAnchor, 10)
         purchase.setHeight(20)
-        purchase.setWidth(60)
+        purchase.setWidth(65)
     }
     
     private func configureSum() {
         addSubview(sum)
-        sum.text = "443 p"
         sum.font = UIFont.boldSystemFont(ofSize: 13)
         sum.pinLeft(to: self.leadingAnchor, 5)
         sum.pinTop(to: purchase.bottomAnchor, 10)
         sum.setHeight(20)
-        sum.setWidth(60)
+        sum.setWidth(65)
     }
     
     private func configureDate() {
         addSubview(date)
-        date.text = "27 декабря 2024"
         date.font = UIFont.systemFont(ofSize: 13)
         date.textColor = .gray
         date.pinLeft(to: purchase.trailingAnchor, 30)
@@ -68,7 +72,6 @@ final class PurchasesViewCell: UITableViewCell {
     
     private func configureCount() {
         addSubview(count)
-        count.text = "Товаров: 0"
         count.font = UIFont.systemFont(ofSize: 13)
         count.textColor = .gray
         count.pinLeft(to: sum.trailingAnchor, 30)

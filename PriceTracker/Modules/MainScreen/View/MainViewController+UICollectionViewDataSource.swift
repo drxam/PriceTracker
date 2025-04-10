@@ -17,6 +17,7 @@ extension MainViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainGoodsCell.reuseId, for: indexPath)
         guard let mainGoodsCell = cell as? MainGoodsCell else { return cell }
         mainGoodsCell.configure(displayedProducts[indexPath.row])
+        mainGoodsCell.delegate = self
         return mainGoodsCell
     }
 }

@@ -15,6 +15,8 @@ final class HistoryView: UIView {
     let wrap = UIView()
     let tableView = UITableView()
     
+    var tableConstraint: NSLayoutConstraint?
+    
     init() {
         super.init(frame: .zero)
         configureUI()
@@ -22,6 +24,16 @@ final class HistoryView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func updateTableHeight() {
+        let newHeight = calculateTableHeight()
+        
+        tableConstraint?.constant = newHeight
+
+        UIView.animate(withDuration: 0.3) {
+            self.layoutIfNeeded()
+        }
     }
     
     private func configureUI() {
@@ -77,8 +89,14 @@ final class HistoryView: UIView {
         tableView.pinTop(to: wrap.topAnchor, 10)
         tableView.pinHorizontal(to: wrap, 15)
         tableView.pinBottom(to: wrap.bottomAnchor, 10)
-        tableView.setHeight(12 * 80)
+        tableConstraint = tableView.setHeight(calculateTableHeight())
         tableView.isScrollEnabled = false
         tableView.isUserInteractionEnabled = false
+        tableView.separatorStyle = .none
+    }
+    
+    private func calculateTableHeight() -> CGFloat {
+        let rowCount = TotalData.purchases.count == 0 ? 1 : TotalData.purchases.count
+        return 70 * CGFloat(rowCount)
     }
 }

@@ -17,12 +17,13 @@ final class ShopRouter: ShopRouterProtocol {
     
     func showProductScreen(from: ShopType, category: String, productId: String) {
         let vc = ProductAssembly.configureModule(shop: from, category: category, productId: productId)
+        print(from, category, productId)
         vc.modalPresentationStyle = .fullScreen
         view?.present(vc, animated: true)
     }
     
-    func showSearchScreen() {
-        let vc = SearchAssembly.configureModule()
+    func showSearchScreen(from shopType: ShopType) {
+        let vc = SearchAssembly.configureModule(from: shopType)
         vc.modalPresentationStyle = .fullScreen
         view?.present(vc, animated: true)
     }

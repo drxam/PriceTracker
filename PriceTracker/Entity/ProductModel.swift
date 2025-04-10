@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct ProductModel {
+struct ProductModel: Hashable {
     var image: URL?
     var name: String
     var price: String

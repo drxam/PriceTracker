@@ -8,5 +8,6 @@
 import Foundation
 
 protocol SearchRouterProtocol: AnyObject {
+    func showProductScreen(from: ShopType, category: String, productId: String)
     func dismissSearchScreen()
 }

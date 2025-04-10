@@ -22,10 +22,25 @@ final class BasketView: UIView {
     let price3 = UILabel()
     let price4 = UILabel()
     
+    let oldPrice1 = UILabel()
+    let oldPrice2 = UILabel()
+    let oldPrice3 = UILabel()
+    let oldPrice4 = UILabel()
+    
     lazy var button1 = createButton()
     lazy var button2 = createButton()
     lazy var button3 = createButton()
     lazy var button4 = createButton()
+    
+    lazy var okey = createSection("О'КЕЙ", "okey", table1, button1, price1, oldPrice1)
+    lazy var perekrestok = createSection("Перекресток", "perekrestok", table2, button2, price2, oldPrice2)
+    lazy var paterochka = createSection("Пятерочка", "5ka", table3, button3, price3, oldPrice3)
+    lazy var magnit = createSection("Магнит", "magnit", table4, button4, price4, oldPrice4)
+    
+    var stack = UIStackView()
+    
+    weak var delegate: BasketViewDelegate?
+    var tableHeightConstraints: [NSLayoutConstraint] = []
     
     init() {
         super.init(frame: .zero)
@@ -42,7 +57,20 @@ final class BasketView: UIView {
         configureScreenName()
         configureClearButton()
         configureScrollView()
+        configureStack()
         configureShops()
+    }
+    
+    func updateTableHeight() {
+        let newHeight = calculateTableHeight()
+        
+        for constraint in tableHeightConstraints {
+            constraint.constant = newHeight
+        }
+
+        UIView.animate(withDuration: 0.3) {
+            self.layoutIfNeeded()
+        }
     }
     
     private func configureScreenName() {
@@ -76,30 +104,25 @@ final class BasketView: UIView {
         scrollView.bounces = true
     }
     
-    private func configureShops() {
-        let okey = createSection("О'КЕЙ", "okey", table1, button1, price1)
-        okey.pinTop(to: scrollView.topAnchor)
-        okey.pinLeft(to: scrollView.safeAreaLayoutGuide.leadingAnchor, 15)
-        okey.pinRight(to: scrollView.safeAreaLayoutGuide.trailingAnchor, 15)
+    private func configureStack() {
+        scrollView.addSubview(stack)
+        stack.axis = .vertical
+        stack.spacing = 15
         
-        let perekrestok = createSection("Перекресток", "perekrestok", table2, button2, price2)
-        perekrestok.pinTop(to: okey.bottomAnchor, 15)
-        perekrestok.pinLeft(to: scrollView.safeAreaLayoutGuide.leadingAnchor, 15)
-        perekrestok.pinRight(to: scrollView.safeAreaLayoutGuide.trailingAnchor, 15)
-        
-        let paterochka = createSection("Пятерочка", "5ka", table3, button3, price3)
-        paterochka.pinTop(to: perekrestok.bottomAnchor, 15)
-        paterochka.pinLeft(to: scrollView.safeAreaLayoutGuide.leadingAnchor, 15)
-        paterochka.pinRight(to: scrollView.safeAreaLayoutGuide.trailingAnchor, 15)
-        
-        let magnit = createSection("Магнит", "magnit", table4, button4, price4)
-        magnit.pinTop(to: paterochka.bottomAnchor, 15)
-        magnit.pinLeft(to: scrollView.safeAreaLayoutGuide.leadingAnchor, 15)
-        magnit.pinRight(to: scrollView.safeAreaLayoutGuide.trailingAnchor, 15)
-        magnit.pinBottom(to: scrollView.contentLayoutGuide.bottomAnchor, 60)
+        stack.pinTop(to: scrollView.topAnchor)
+        stack.pinBottom(to: scrollView.contentLayoutGuide.bottomAnchor, 60)
+        stack.pinLeft(to: scrollView.safeAreaLayoutGuide.leadingAnchor, 15)
+        stack.pinRight(to: scrollView.safeAreaLayoutGuide.trailingAnchor, 15)
     }
     
-    private func createSection(_ title: String, _ image: String, _ table: UITableView, _ button: UIButton, _ price: UILabel) -> UIView {
+    private func configureShops() {
+        stack.addArrangedSubview(okey)
+        stack.addArrangedSubview(perekrestok)
+        stack.addArrangedSubview(paterochka)
+        stack.addArrangedSubview(magnit)
+    }
+    
+    private func createSection(_ title: String, _ image: String, _ table: UITableView, _ button: UIButton, _ price: UILabel, _ oldPrice: UILabel) -> UIView {
         let wrap = UIView()
         scrollView.addSubview(wrap)
         wrap.layer.cornerRadius = 30
@@ -151,10 +174,23 @@ final class BasketView: UIView {
         price.pinCenterY(to: button)
         price.pinRight(to: button.leadingAnchor, 15)
         price.setHeight(20)
-        price.setWidth(80)
+        price.setWidth(75)
         price.textAlignment = .right
         price.font = UIFont.boldSystemFont(ofSize: 14)
-        price.text = "549,99 ₽"
+        price.text = "0,00 ₽"
+        
+        wrap.addSubview(oldPrice)
+        oldPrice.pinCenterY(to: button)
+        oldPrice.pinRight(to: price.leadingAnchor, 15)
+        oldPrice.setHeight(20)
+        oldPrice.setWidth(65)
+        oldPrice.textAlignment = .right
+        oldPrice.font = UIFont.systemFont(ofSize: 12)
+        oldPrice.textColor = .gray
+        oldPrice.attributedText = NSAttributedString(
+            string: "",
+            attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue]
+        )
         
         wrap.addSubview(table)
         table.pinHorizontal(to: wrap, 15)
@@ -162,7 +198,8 @@ final class BasketView: UIView {
         table.pinBottom(to: result.topAnchor, 10)
         table.isScrollEnabled = false
         table.separatorStyle = .none
-        table.setHeight(calculateTableHeight())
+        let heightConstraint = table.setHeight(calculateTableHeight())
+        tableHeightConstraints.append(heightConstraint)
         
         return wrap
     }
@@ -176,6 +213,7 @@ final class BasketView: UIView {
     }
     
     private func calculateTableHeight() -> CGFloat {
-        return 96 * 6 + 10
+        let rowCount = delegate?.getProductsCount()
+        return 96 * CGFloat(rowCount ?? 1) + 10
     }
 }

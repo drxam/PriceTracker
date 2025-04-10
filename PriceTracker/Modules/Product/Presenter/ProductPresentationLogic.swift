@@ -10,4 +10,6 @@ import Foundation
 protocol ProductPresentationLogic: AnyObject {
     func presentProduct(product: PaterochkaProduct)
     func presentProduct(product: MagnitProduct)
+    
+    func setProduct(product: ProductModel)
 }

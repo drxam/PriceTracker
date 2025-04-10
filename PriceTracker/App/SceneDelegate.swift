@@ -11,22 +11,16 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    let productsWorker = ProductsWorker()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        let dispatchGroup = DispatchGroup()
-        
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-        dispatchGroup.enter()
-        productsWorker.loadProducts() {
+        Task {
+            await ProductsWorker.shared.loadProducts()
             DataManager.shared.loadAllData()
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.notify(queue: .main) {
+            
             let isDarkMode = UserDefaults.standard.bool(forKey: "isDarkMode")
             window.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
             window.rootViewController = TabBarController()

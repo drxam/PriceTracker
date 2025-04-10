@@ -12,6 +12,8 @@ final class ProductViewController: UIViewController, ProductDisplayLogic {
     var interactor: ProductBusinessLogic?
     var router: ProductRouterProtocol?
     
+    var product: ProductModel?
+    
     override func loadView() {
         view = productView
     }
@@ -33,11 +35,20 @@ final class ProductViewController: UIViewController, ProductDisplayLogic {
         productView.configure(with: product)
     }
     
+    func setProduct(product: ProductModel) {
+        self.product = product
+    }
+    
     private func configure() {
         productView.backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        productView.plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
     }
     
     @objc private func backButtonTapped() {
         router?.dismissProductScreen()
+    }
+    
+    @objc private func plusButtonTapped() {
+        interactor?.plusButtonTapped(for: product)
     }
 }

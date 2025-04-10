@@ -10,4 +10,5 @@ import Foundation
 protocol ProductDisplayLogic: AnyObject {
     func displayProduct(product: PaterochkaProduct)
     func displayProduct(product: MagnitProduct)
+    func setProduct(product: ProductModel)
 }

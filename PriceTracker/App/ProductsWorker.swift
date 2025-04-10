@@ -8,100 +8,43 @@
 import Foundation
 
 final class ProductsWorker {
-    func loadProducts(completion: @escaping () -> Void) {
-        let dispatchGroup = DispatchGroup()
-        
-        dispatchGroup.enter()
-        fetchProducts(from: "http://127.0.0.1:5000/magnit") { result in
-            switch result {
-            case .success(let data):
-                let decoder = JSONDecoder()
-                do {
-                    let magnitResponse = try decoder.decode(MagnitResponse.self, from: data)
-                    TotalData.magnitRawAll = magnitResponse.categories
-                } catch {
-                    print("Ошибка декодирования магнита: \(error)")
-                }
-            case .failure(let error):
-                print("Ошибка загрузки данных: \(error.localizedDescription)")
-            }
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        fetchProducts(from: "http://127.0.0.1:5000/5ka") { result in
-            switch result {
-            case .success(let data):
-                let decoder = JSONDecoder()
-                do {
-                    let paterochkaResponse = try decoder.decode(PaterochkaResponse.self, from: data)
-                    TotalData.paterochkaRawAll = paterochkaResponse.categories
-                } catch {
-                    print("Ошибка декодирования пятерочки: \(error)")
-                }
-            case .failure(let error):
-                print("Ошибка загрузки данных: \(error.localizedDescription)")
-            }
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        fetchProducts(from: "http://127.0.0.1:5000/5ka_cat") { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let categories = try JSONDecoder().decode([CategoryModel].self, from: data)
-                    TotalData.paterochkaCat = categories
-                } catch {
-                    print("Ошибка декодирования: \(error)")
-                }
-            case .failure(let error):
-                print("Ошибка загрузки данных: \(error.localizedDescription)")
-            }
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        fetchProducts(from: "http://127.0.0.1:5000/magnit_cat") { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let categories = try JSONDecoder().decode([CategoryModel].self, from: data)
-                    TotalData.magnitCat = categories
-                } catch {
-                    print("Ошибка декодирования: \(error)")
-                }
-            case .failure(let error):
-                print("Ошибка загрузки данных: \(error.localizedDescription)")
-            }
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.notify(queue: .main) {
-            completion()
+    static let shared = ProductsWorker()
+    private init() {}
+    
+    func loadProducts() async {
+        do {
+            async let magnitData = fetchProducts(from: "http://127.0.0.1:5000/magnit")
+            async let paterochkaData = fetchProducts(from: "http://127.0.0.1:5000/5ka")
+            async let magnitCategoriesData = fetchProducts(from: "http://127.0.0.1:5000/magnit_cat")
+            async let paterochkaCategoriesData = fetchProducts(from: "http://127.0.0.1:5000/5ka_cat")
+
+            let (magnitResponse, paterochkaResponse, magnitCategories, paterochkaCategories) = try await (
+                decode(MagnitResponse.self, from: magnitData),
+                decode(PaterochkaResponse.self, from: paterochkaData),
+                decode([CategoryModel].self, from: magnitCategoriesData),
+                decode([CategoryModel].self, from: paterochkaCategoriesData)
+            )
+
+            TotalData.magnitRawAll = magnitResponse.categories
+            TotalData.paterochkaRawAll = paterochkaResponse.categories
+            TotalData.magnitCat = magnitCategories
+            TotalData.paterochkaCat = paterochkaCategories
+
+        } catch {
+            print("Ошибка загрузки данных: \(error.localizedDescription)")
         }
     }
-    
-    private func fetchProducts(from url: String, completion: @escaping (Result<Data, Error>) -> Void) {
-        guard let url = URL(string: url) else {
-            completion(.failure(NSError(domain: "Invalid URL", code: -1, userInfo: nil)))
-            return
+
+    private func fetchProducts(from urlString: String) async throws -> Data {
+        guard let url = URL(string: urlString) else {
+            throw NSError(domain: "Invalid URL", code: -1, userInfo: nil)
         }
-        
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(NSError(domain: "No data", code: -1, userInfo: nil)))
-                return
-            }
-            
-            completion(.success(data))
-        }
-        
-        task.resume()
+
+        let (data, _) = try await URLSession.shared.data(from: url)
+        return data
+    }
+
+    private func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T {
+        return try JSONDecoder().decode(T.self, from: data)
     }
 }

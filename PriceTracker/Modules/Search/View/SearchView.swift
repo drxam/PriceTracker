@@ -17,6 +17,7 @@ final class SearchView: UIView {
     let searchIcon = UIImageView()
     
     let backButton = UIButton(type: .system)
+    let goods = UITableView(frame: .zero)
     
     init() {
         super.init(frame: .zero)
@@ -33,6 +34,7 @@ final class SearchView: UIView {
         configureScreenName()
         configureSearch()
         configureBackButton()
+        configureGoods()
     }
     
     private func configureScreenName() {
@@ -83,5 +85,15 @@ final class SearchView: UIView {
         backButton.backgroundColor = .clear
         backButton.setImage(UIImage(named: "arrow_back"), for: .normal)
         backButton.tintColor = UIColor(named: "icon_color")
+    }
+    
+    private func configureGoods() {
+        addSubview(goods)
+        goods.pinTop(to: searchWrap.bottomAnchor, 10)
+        goods.pinHorizontal(to: self, 15)
+        goods.pinBottom(to: self.bottomAnchor)
+        goods.backgroundColor = .clear
+        goods.separatorStyle = .none
+        goods.showsVerticalScrollIndicator = false
     }
 }

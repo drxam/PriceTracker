@@ -8,7 +8,7 @@
 import Foundation
 
 protocol BasketRouterProtocol: AnyObject {
-    func showProductScreen()
+    func showProductScreen(_ product: ProductModel)
     func showAlert(
         title: String,
         confirmTitle: String,

@@ -9,4 +9,5 @@ import Foundation
 
 protocol ProductBusinessLogic: AnyObject {
     func fetchProduct(from: ShopType, category: String, productId: String)
+    func plusButtonTapped(for product: ProductModel?)
 }

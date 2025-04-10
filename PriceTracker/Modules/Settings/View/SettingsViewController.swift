@@ -28,7 +28,7 @@ final class SettingsViewController: UIViewController {
     }
     
     private func confirmClear() {
-        print(24234)
+        NotificationCenter.default.post(name: NSNotification.Name("ClearPurchaseHistory"), object: nil)
     }
     
     @objc private func buttonTapped() {
